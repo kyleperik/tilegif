@@ -1,0 +1,7 @@
+syntax: glob
+*.pyc
+config.py
+venv/*
+*egg-info*
+grapevine/static/gen/
+.webassets-cache

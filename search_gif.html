@@ -1,0 +1,49 @@
+<html>
+<head>
+    <script>
+     var magic_api_key = 'd3d00f0da3554471bf0ffb975f9d7ed3';
+
+     function choose_gif(result) {
+         var actual_limit = result.data.length;
+         var index = Math.floor(Math.random() * actual_limit);
+         return result.data[index].images.original.url;
+     }
+     
+     var search_cache = {};
+     function get_random_gif_url(query) {
+         return new Promise((resolve, reject) => {
+             if (search_cache[query]) {
+                 resolve(choose_gif(search_cache[query]));
+		 return;
+             }
+             var limit = 25;
+             fetch(`https://api.giphy.com/v1/gifs/search?api_key=${magic_api_key}&q=${query}&limit=${limit}`)
+                 .then((r) => r.json())
+                 .then((result) => {
+                     search_cache[query] = result;
+                     resolve(choose_gif(result));
+                 });
+         });
+     }
+     
+     window.addEventListener('load', () => {
+         document.querySelector('button#K').addEventListener('click', () => {
+             var query = document.querySelector('input#Search').value;
+             get_random_gif_url(query)
+                 .then((gif) => {
+                     document.querySelector('body').style.background = `url(${gif})`
+                 });
+         });
+     });
+    </script>
+    
+</head>
+<body style="position: fixed; top: 0; bottom: 0; left: 0; right: 0;">
+    <span onmouseover="this.style.opacity = 1" onmouseleave="this.style.opacity = 0.5" style="opacity: 0.5; transition: opacity 250ms;" >
+	<input id="Search" type="text" placeholder="search here" />
+	<button id="K" >k</button>
+    </span>
+
+    <a href="#what" style="color: grey; float: right;">What?</a>
+</body>
+</html>
