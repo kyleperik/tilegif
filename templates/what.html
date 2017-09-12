@@ -4,7 +4,7 @@
         <script>
          fetch('/gif?q=hi')
          .then(r => r.text())
-         .then(url => document.querySelector('img').src = url);
+         .then(url => document.querySelector('#Hi').src = url);
         </script>
     </head>
     <body style="font-family: sans-serif;">
@@ -15,6 +15,7 @@
         <br />
         <a href="/">Go back to the app darnit</a>
         <br />
-        <img />
+        <img id="Hi"/>
+        <img style="position: fixed; bottom: 0; right: 0; height: 30px;" src="{{ url_for('static', filename='giphy_attribution.gif') }}" />
     </body>
 </html>
