@@ -17,6 +17,13 @@ if giphy_api_key is None:
 def index():
     return render_template('index.html')
 
+@app.route('/what')
+def what():
+    return render_template(
+        'what.html',
+        github_url = app.config.get('GITHUB_URL')
+    )
+
 @lru_cache(maxsize=100)
 def get_gif_urls(query):
     url = f'{giphy_api_url}/gifs/search'
@@ -44,4 +51,4 @@ def gif():
     return random_gif(query)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

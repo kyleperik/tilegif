@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <script>
+         fetch('/gif?q=hi')
+         .then(r => r.text())
+         .then(url => document.querySelector('img').src = url);
+        </script>
+    </head>
+    <body style="font-family: sans-serif;">
+        <h1>Hello</h1>
+        <p>This is a little app I wrote to tile a gif across the screen, given a search query. Enjoy.</p>
+        <br />
+        <a href="{{ github_url }}">github</a>
+        <br />
+        <a href="/">Go back to the app darnit</a>
+        <br />
+        <img />
+    </body>
+</html>

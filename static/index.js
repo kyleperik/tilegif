@@ -1,10 +1,16 @@
+var flash_counter = 0;
 function flash(text) {
+    flash_counter++;
     var $flash = document.querySelector('.flash_message');
     $flash.textContent = text;
     $flash.style.opacity = 1;
-    setTimeout(() => {
-        $flash.style.opacity = 0;
-    }, 6000);
+    return {
+        stop: () => {
+            if (--flash_counter <= 0) {
+                $flash.style.opacity = 0;
+            }
+        }
+    };
 }
 
 function get_random_gif_url(query) {
@@ -20,16 +26,40 @@ function get_random_gif_url(query) {
             preload_img.src = result;
             preload_img.onload = () => resolve(result);
         })
-        .catch(() => flash('No Results'));
+        .catch(() => {
+            var no_results = flash('No Results');
+            setTimeout(() => no_results.stop(), 6000);
+            reject();
+        });
     });
 }
 
-window.addEventListener('load', () => {
-    document.querySelector('button#K').addEventListener('click', () => {
-        var query = document.querySelector('input#Search').value;
-        get_random_gif_url(query)
-            .then((gif) => {
-                document.querySelector('body').style.background = `url(${gif})`;
-            });
+function load_image () {
+    var query = document.querySelector('input#Search').value;
+    var loading_flash;
+    var show_loading = setTimeout(() => {
+        loading_flash = flash('Loading...');
+    }, 1000);
+    get_random_gif_url(query)
+    .then((gif) => {
+        document.querySelector('body').style.backgroundImage = `url(${gif})`;
+    })
+    .catch(() => {})
+    .then(() => {
+        clearTimeout(show_loading);
+        if (loading_flash) {
+            loading_flash.stop();
+        }
     });
-});
+}
+
+function init () {
+    document.querySelector('button#K').addEventListener('click', load_image);
+    document.querySelector('input#Search').addEventListener('keypress', (e) => {
+        if (e.which === 13) {
+            load_image();
+        }
+    });
+}
+
+window.addEventListener('load', init);
