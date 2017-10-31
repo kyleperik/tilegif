@@ -34,8 +34,7 @@ function get_random_gif_url(query) {
     });
 }
 
-function load_image () {
-    var query = document.querySelector('input#Search').value;
+function load_image (query) {
     var loading_flash;
     var show_loading = setTimeout(() => {
         loading_flash = flash('Loading...');
@@ -53,11 +52,23 @@ function load_image () {
     });
 }
 
+function load_image_triggered () {
+    var query = document.querySelector('input#Search').value;
+    window.location.hash = query;
+    load_image(query);
+}
+
 function init () {
-    document.querySelector('button#K').addEventListener('click', load_image);
+    if (window.location.hash) {
+	var query = window.location.hash.substr(1);
+        document.querySelector('input#Search').value = query;
+        load_image(query);
+    }
+    
+    document.querySelector('button#K').addEventListener('click', load_image_triggered);
     document.querySelector('input#Search').addEventListener('keypress', (e) => {
         if (e.which === 13) {
-            load_image();
+            load_image_triggered();
         }
     });
 }
